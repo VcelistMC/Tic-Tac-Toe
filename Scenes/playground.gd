@@ -1,34 +1,30 @@
 extends CenterContainer
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 var turn = 1
 var res
 var buttons
+var curr
 var grid = [
 	"", "", "", 
 	"", "", "", 
 	"", "", ""
 ]
-var curr
+var player = "O"
+var opponent = "X"
 
-# Called when the node enters the scene tree for the first time.
+
 func _ready():
 	buttons = $GridContainer.get_children()
-	print(grid)
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pas
+	var move = findBestMove(grid)
+	print("best move for x is" + str(move+1))
 	
 
 func _on_TextureButton_pressed(ind):
 	if turn == 1:
 		res = "res://assests/x-button.png"
 		curr = "X"
+		var move = findBestMove(grid)
+		print("best move for x is" + str(move+1))
 	else:
 		res = "res://assests/o-button.png"
 		curr = "O"
@@ -36,18 +32,59 @@ func _on_TextureButton_pressed(ind):
 	buttons[ind-1].disabled = true
 	turn = -turn
 	grid[ind-1] = curr
-	if check_winner(curr): 
+	if isWinner(curr): 
 		$Label.text = curr + " WON"
 		for button in buttons:
 			button.disabled = true
+	
 
-func check_winner(player):
+func isWinner(potential_winner):
 	for i in range(3):
 		var cell = 3*i
-		if grid[cell] == grid[cell+1] and curr == grid[cell+2]: return true #check rows
-		elif grid[i] == grid[i+3] and curr == grid[i+6]: return true #check cols
+		if grid[cell] == grid[cell+1] and potential_winner == grid[cell+2]: return true #check rows
+		elif grid[i] == grid[i+3] and potential_winner == grid[i+6]: return true #check cols
 	
-	if grid[0] == grid[4] and curr == grid[8]: return true
-	elif grid[2] == grid[4] and curr == grid[6]: return true
+	if grid[0] == grid[4] and potential_winner == grid[8]: return true
+	elif grid[2] == grid[4] and potential_winner == grid[6]: return true
 	else: return false
 	
+func evaluate():
+	if isWinner("X"): return 10
+	elif isWinner("O"): return -10
+	else: return 0
+
+func minimax(board, depth, maxPlayer):
+	var val = evaluate()
+	if val != 0: return val
+	elif not board.has(""): return 0
+	
+	if maxPlayer:
+		var bestMove = -10
+		for cell in range(9):
+			if board[cell] == "":
+				board[cell] = player
+				bestMove = max(bestMove, minimax(board, depth+1, !maxPlayer))
+				board[cell] = ""
+		return bestMove
+	else:
+		var bestMove = 10
+		for cell in range(9):
+			if board[cell] == "":
+				board[cell] = opponent
+				bestMove = min(bestMove, minimax(board, depth+1, !maxPlayer))
+				board[cell] = ""
+		return bestMove
+
+func findBestMove(board):
+	var bestVal = -10000
+	var bestmove = -1
+	for cell in range(9):
+		if board[cell] == "":
+			board[cell] = player
+			var val = minimax(board, 0, false)
+			board[cell] = ""
+			if val > bestVal:
+				bestVal = val
+				bestmove = cell
+	
+	return bestmove
