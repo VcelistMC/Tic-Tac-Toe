@@ -17,6 +17,7 @@ func _ready():
 	buttons = $GridContainer.get_children()
 	var move = findBestMove(grid)
 	print("best move for x is" + str(move+1))
+	print("yeeet")
 	
 
 func _on_TextureButton_pressed(ind):
