@@ -19,6 +19,10 @@ config/name="AI Tic-tac-toe"
 run/main_scene="res://Scenes/title.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Global="*res://Scenes/global.gd"
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"

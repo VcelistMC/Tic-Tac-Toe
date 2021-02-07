@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scenes/letter_choose.gd" type="Script" id=1]
+
+[node name="CenterContainer" type="CenterContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 436.0
+margin_top = 167.0
+margin_right = 588.0
+margin_bottom = 433.0
+custom_constants/separation = 26
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+margin_right = 152.0
+margin_bottom = 14.0
+text = "CHOOOSE YOUR LETTER"
+align = 1
+
+[node name="Button" type="Button" parent="VBoxContainer"]
+margin_top = 40.0
+margin_right = 152.0
+margin_bottom = 140.0
+rect_min_size = Vector2( 150, 100 )
+text = "X"
+
+[node name="Button2" type="Button" parent="VBoxContainer"]
+margin_top = 166.0
+margin_right = 152.0
+margin_bottom = 266.0
+rect_min_size = Vector2( 100, 100 )
+text = "O"
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_Button2_pressed"]
