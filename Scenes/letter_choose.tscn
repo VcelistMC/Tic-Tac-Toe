@@ -1,6 +1,15 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Scenes/letter_choose.gd" type="Script" id=1]
+[ext_resource path="res://assests/Dokdo/Dokdo-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://assests/o-button.png" type="Texture" id=3]
+[ext_resource path="res://assests/x-button.png" type="Texture" id=4]
+[ext_resource path="res://assests/o-button-hover.png" type="Texture" id=5]
+[ext_resource path="res://assests/x-button-hover.png" type="Texture" id=6]
+
+[sub_resource type="DynamicFont" id=1]
+size = 37
+font_data = ExtResource( 2 )
 
 [node name="CenterContainer" type="CenterContainer"]
 anchor_right = 1.0
@@ -10,31 +19,45 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+margin_right = 1024.0
+margin_bottom = 600.0
+rect_min_size = Vector2( 1024, 600 )
+color = Color( 0.105882, 0.14902, 0.172549, 1 )
+
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-margin_left = 436.0
-margin_top = 167.0
-margin_right = 588.0
-margin_bottom = 433.0
+margin_left = 262.0
+margin_top = 150.0
+margin_right = 762.0
+margin_bottom = 449.0
 custom_constants/separation = 26
 
 [node name="Label" type="Label" parent="VBoxContainer"]
-margin_right = 152.0
-margin_bottom = 14.0
-text = "CHOOOSE YOUR LETTER"
+margin_right = 500.0
+margin_bottom = 38.0
+custom_fonts/font = SubResource( 1 )
+text = "CHOOSE YOUR LETTER"
 align = 1
 
-[node name="Button" type="Button" parent="VBoxContainer"]
-margin_top = 40.0
-margin_right = 152.0
-margin_bottom = 140.0
-rect_min_size = Vector2( 150, 100 )
-text = "X"
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 64.0
+margin_right = 500.0
+margin_bottom = 299.0
 
-[node name="Button2" type="Button" parent="VBoxContainer"]
-margin_top = 166.0
-margin_right = 152.0
-margin_bottom = 266.0
+[node name="Button" type="TextureButton" parent="VBoxContainer/HBoxContainer"]
+margin_right = 248.0
+margin_bottom = 235.0
+rect_min_size = Vector2( 150, 100 )
+texture_normal = ExtResource( 4 )
+texture_hover = ExtResource( 6 )
+
+[node name="Button2" type="TextureButton" parent="VBoxContainer/HBoxContainer"]
+margin_left = 252.0
+margin_right = 500.0
+margin_bottom = 235.0
 rect_min_size = Vector2( 100, 100 )
-text = "O"
-[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_Button_pressed"]
-[connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_Button2_pressed"]
+texture_normal = ExtResource( 3 )
+texture_hover = ExtResource( 5 )
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button2" to="." method="_on_Button2_pressed"]

@@ -1,46 +1,57 @@
 extends CenterContainer
 
-var turn = 1
-var buttons
-var grid = [
-	"", "", "", 
-	"", "", "", 
-	"", "", ""
-]
-var player = Global.player
-var opponent = Global.oppenent
+var buttons # array for all buttons on the map
+var grid #array too hold string values for the 
 
-var player_texture = Global.player_texture
-var opponent_texture = Global.oppenent_texture
+var human_player
+var opponent
+
+var human_player_texture
+var opponent_texture
+var moves = 9
 
 
 func _ready():
-	buttons = $GridContainer.get_children()
+	buttons = $VBoxContainer/GridContainer.get_children()
+	human_player = Global.player
+	human_player_texture = Global.player_texture
+	opponent = Global.oppenent
+	opponent_texture = Global.oppenent_texture
+	grid = [
+		"", "", "", 
+		"", "", "", 
+		"", "", ""
+	]
 
-	
+func isGameOver(player):
+	if isWinner(player):
+		$Reset_timer.start()
+		$VBoxContainer/Label.text = player + " WON"
+		for button in buttons:
+			button.disabled = true
+	elif not grid.has(""):
+		$Reset_timer.start()
+		$VBoxContainer/Label.text = "It's a draw!"
+		for button in buttons:
+			button.disabled = true
 
 func _on_TextureButton_pressed(ind):
-	# FIXME: oppenent wins but game no end??? lmao
-	buttons[ind-1].texture_normal = player_texture
+	buttons[ind-1].texture_normal = human_player_texture
 	buttons[ind-1].disabled = true
-	turn = -turn
-	grid[ind-1] = player
-	if isWinner("O"): 
-		$Label.text = "O WON"
-		for button in buttons:
-			button.disabled = true
+	grid[ind-1] = human_player
+	isGameOver(human_player)
 	
-	var move = findBestMove(grid)
+	
+	
 			
-	buttons[move].texture_normal = opponent_texture
-	buttons[move].disabled = true
-	grid[move] = opponent
-	
-	if isWinner("X"): 
-		$Label.text = "X WON"
-		for button in buttons:
-			button.disabled = true
-	
+	var move = findBestMove(grid)
+	print(move)
+	if move >= 0:
+		buttons[move].texture_normal = opponent_texture
+		buttons[move].disabled = true
+		grid[move] = opponent
+		isGameOver(opponent)
+	print(grid)
 
 func isWinner(potential_winner):
 	for i in range(3):
@@ -59,7 +70,7 @@ func isWinner(potential_winner):
 	
 func evaluate():
 	if isWinner(opponent): return 10
-	elif isWinner(player): return -10
+	elif isWinner(human_player): return -10
 	else: return 0
 
 func minimax(board, depth, maxPlayer, alpha, beta):
@@ -82,7 +93,7 @@ func minimax(board, depth, maxPlayer, alpha, beta):
 		var bestMove = 10
 		for cell in range(9):
 			if board[cell] == "":
-				board[cell] = player
+				board[cell] = human_player
 				bestMove = min(bestMove, minimax(board, depth+1, !maxPlayer, alpha, beta))
 				board[cell] = ""
 				beta = min(beta, bestMove)
@@ -103,3 +114,7 @@ func findBestMove(board):
 				bestmove = cell
 	
 	return bestmove
+
+
+func _on_Reset_timer_timeout():
+	get_tree().change_scene("res://Scenes/letter_choose.tscn")
