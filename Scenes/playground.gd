@@ -4,11 +4,12 @@ var buttons # array for all buttons on the map
 var grid #array too hold string values for the 
 
 var human_player
-var opponent
-
 var human_player_texture
+
 var opponent_texture
+var opponent
 var moves = 9
+
 
 
 func _ready():
@@ -23,6 +24,7 @@ func _ready():
 		"", "", ""
 	]
 
+
 func isGameOver(player):
 	if isWinner(player):
 		$Reset_timer.start()
@@ -35,13 +37,12 @@ func isGameOver(player):
 		for button in buttons:
 			button.disabled = true
 
+
 func _on_TextureButton_pressed(ind):
 	buttons[ind-1].texture_normal = human_player_texture
 	buttons[ind-1].disabled = true
 	grid[ind-1] = human_player
 	isGameOver(human_player)
-	
-	
 	
 			
 	var move = findBestMove(grid)
@@ -52,6 +53,7 @@ func _on_TextureButton_pressed(ind):
 		grid[move] = opponent
 		isGameOver(opponent)
 	print(grid)
+
 
 func isWinner(potential_winner):
 	for i in range(3):
@@ -68,10 +70,12 @@ func isWinner(potential_winner):
 		return (grid[2] == potential_winner)
 	else: return false
 	
+
 func evaluate():
 	if isWinner(opponent): return 10
 	elif isWinner(human_player): return -10
 	else: return 0
+
 
 func minimax(board, depth, maxPlayer, alpha, beta):
 	var val = evaluate()
@@ -100,6 +104,7 @@ func minimax(board, depth, maxPlayer, alpha, beta):
 				if beta <= alpha:
 					break
 		return bestMove
+
 
 func findBestMove(board):
 	var bestVal = -10000
